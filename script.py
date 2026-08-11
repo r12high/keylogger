@@ -1,29 +1,20 @@
-import pynput
-from pynput.keyboard import Key, Listener
+import sys
+import time
 
+log_file = "log.txt"
 
-keys = []
+def log_input(text):
+    with open(log_file, 'a') as f:
+        f.write(f"{time.ctime()}: {text}\n")
+    print(f"Logged: {text}")
 
-
-def on_press(key):
-  keys.append(key)
-  write_file(keys)
-
-
-def write_file(keys):
-  with open('log.txt', 'w') as f:
-    for key in keys:
-      #removing ''
-      k = str(key).replace("'", "") 
-      f.write(k)
-      #explicitly adding a space after every keystroke for readability
-      f.write(' ') 
-
-
-def on_release(key):
-  if key == Key.delete:
-    return False
-
-
-with Listener(on_press = on_press, on_release = on_release) as listener:
-  listener.join()
+if __name__ == "__main__":
+    print("Running data logger. Enter text (type 'exit' to stop):")
+    while True:
+        try:
+            user_in = input("> ")
+            if user_in.lower() == 'exit':
+                break
+            log_input(user_in)
+        except EOFError:
+            break
