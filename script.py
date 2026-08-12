@@ -13,12 +13,16 @@ if __name__ == "__main__":
     print("Running data logger. Enter text (type 'exit' to stop):")
     import http.server
     import socketserver
+    import threading
+
     PORT = 8000
     Handler = http.server.SimpleHTTPRequestHandler
-    with socketserver.TCPServer(("", PORT), Handler) as httpd:
-        print(f"Serving at port {PORT}")
-        import threading
-        threading.Thread(target=httpd.serve_forever, daemon=True).start()
+    httpd = socketserver.TCPServer(("", PORT), Handler)
+    
+    server_thread = threading.Thread(target=httpd.serve_forever, daemon=True)
+    server_thread.start()
+    print(f"Serving at port {PORT}")
+
     while True:
         try:
             user_in = input("> ")
