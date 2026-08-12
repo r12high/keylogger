@@ -9,14 +9,21 @@ def log_input(text):
     print(f"Logged: {text}")
 
 if __name__ == "__main__":
+    if __name__ == "__main__":
     print("Running data logger. Enter text (type 'exit' to stop):")
+    import http.server
+    import socketserver
+    PORT = 8000
+    Handler = http.server.SimpleHTTPRequestHandler
+    with socketserver.TCPServer(("", PORT), Handler) as httpd:
+        print(f"Serving at port {PORT}")
+        import threading
+        threading.Thread(target=httpd.serve_forever, daemon=True).start()
     while True:
-        import http.server
-import socketserver
-
-PORT = 8000
-Handler = http.server.SimpleHTTPRequestHandler
-
-with socketserver.TCPServer(("", PORT), Handler) as httpd:
-    print(f"Serving at port {PORT}")
-    httpd.serve_forever()
+        try:
+            user_in = input("> ")
+            if user_in.lower() == 'exit':
+                break
+            log_input(user_in)
+        except EOFError:
+            break
